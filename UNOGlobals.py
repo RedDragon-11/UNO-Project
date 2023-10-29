@@ -1,0 +1,15 @@
+#Card Colors
+NONE = 0
+RED = 1
+BLUE = 2
+GREEN = 3
+YELLOW = 4
+
+#Specials
+GENERAL = 0
+WILD = 1
+WILD4 = 2
+DRAW2 = 3
+SKIP = 4
+REVERSE = 5
+
