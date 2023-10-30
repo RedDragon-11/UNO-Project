@@ -2,18 +2,17 @@ from UNOcard import UNOcard
 from UNOlogic import UNOlogic
 import UNOGlobals as ug
 
-deck = []
-centerCard = None
-playerHand = []
-cpuHand = []
+#Starting Variables
+deck = UNOcard.deckBuilder()
+centerCard = UNOlogic.setCenterCard(deck)
+playerHand = UNOlogic.drawStartingHand(deck)
+cpuHand = UNOlogic.drawStartingHand(deck)
 gameOver = False
 cpuSkipped = False
 playerSkipped = False
 
-deck = UNOcard.deckBuilder()
-playerHand = UNOlogic.drawStartingHand(deck)
-cpuHand = UNOlogic.drawStartingHand(deck)
-centerCard = UNOlogic.setCenterCard(deck)
+
+
 
 
 #Loop game till someone has no cards in their hand.
@@ -42,8 +41,8 @@ while (gameOver == False):
             #In 1v1 Uno, a reverse is effectively a skip since it makes the turn order come back to you. At Least thats my understanding. 
             #Its either an effect skip or a card that has no effect. I opted in for it being another form of a skip
             elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
-                    print("The Computer's turn has been skipped!")
-                    cpuSkipped == True
+                print("The Computer's turn has been skipped!")
+                cpuSkipped == True
         palyerHand = newHand
     elif(playerSkipped == True):
         playerSkipped == False
@@ -67,8 +66,8 @@ while (gameOver == False):
                 for num in range(0,4):
                     playerHand = UNOlogic.draw(deck, playerHand) 
             elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
-                    print("Your turn has been skipped!")
-                    playerSkipped = True
+                print("Your turn has been skipped!")
+                playerSkipped = True
         cpuHand = newHand
     elif(cpuSkipped == True):
         cpuSkipped = False
