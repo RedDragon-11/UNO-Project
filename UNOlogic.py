@@ -56,6 +56,7 @@ class UNOlogic:
             if (UNOlogic.playableCard(centerCard, playerHand[int(userInput) - 1]) == True):
                 if(UNOcard.getSpecial(playerHand[int(userInput) - 1]) == ug.WILD or UNOcard.getSpecial(playerHand[int(userInput) - 1]) == ug.WILD4):
                     card = UNOlogic.playerSetWildCard()
+                    playerHand = playerHand.remove(card)
                     output = [card, playerHand]
                     return output
                 elif(UNOcard.getSpecial((playerHand[int(userInput) - 1])) == ug.DRAW2):
