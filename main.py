@@ -40,12 +40,13 @@ while (gameOver == False):
                     cpuHand = UNOlogic.draw(deck, cpuHand)  
             #In 1v1 Uno, a reverse is effectively a skip since it makes the turn order come back to you. At Least thats my understanding. 
             #Its either an effect skip or a card that has no effect. I opted in for it being another form of a skip
-            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
-                print("The Computer's turn has been skipped!")
-                cpuSkipped == True
+            #A really Odd Error has Occured. Player skips does nothing. Cpu skips skip you indefinitely
+            #elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
+                #print("The Computer's turn has been skipped!")
+                #cpuSkipped == True
         palyerHand = newHand
     elif(playerSkipped == True):
-        playerSkipped == False
+         playerSkipped == False
 
     
    
@@ -59,18 +60,18 @@ while (gameOver == False):
             centerCard = newCenter
             if(UNOcard.getSpecial(newCenter) ==  ug.DRAW2):
                 print("You've Been +2'd!")
-                for num in range(0,2):
+                for num in range(2):
                     playerHand = UNOlogic.draw(deck, playerHand)
             elif(UNOcard.getSpecial(newCenter) ==  ug.WILD4):
                 print("You've Been +4'd!!")
-                for num in range(0,4):
+                for num in range(4):
                     playerHand = UNOlogic.draw(deck, playerHand) 
-            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
-                print("Your turn has been skipped!")
-                playerSkipped = True
+            #elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
+                #print("Your turn has been skipped!")
+                #playerSkipped = True
         cpuHand = newHand
     elif(cpuSkipped == True):
-        cpuSkipped = False
+         cpuSkipped = False
 
       
     
@@ -78,26 +79,25 @@ while (gameOver == False):
     #Game win Status Checks
     if(len(cpuHand) == 2):
         print("The Computer only has 2 cards Left!")
-    elif(len(cpuHand) == 1):
+    if(len(cpuHand) == 1):
         print("The Computer only has 1 card Left! They have UNO!")
     
     if(len(playerHand) == 2):
         print("You only have 2 cards Left!")
-    elif(len(palyerHand) == 1):
+    if(len(palyerHand) == 1):
         print("You only have 1 card Left! You have UNO!")
 
-    #replenishes deck if it runs out
-    if((len(deck) == 0)):
-        deck = UNOcard.deckReset(cpuHand, playerHand)
-
-    #game ender
+    #Game ender
     if (len(playerHand) == 0 or len(cpuHand) == 0):
         if(playerHand == 0):
             print("You win!")
         elif(cpuHand == 0):
             print("The Computer Won!")
         gameOver == True
-    
+
+    #Replenishes deck if it runs out
+    if((len(deck) == 0)):
+        deck = UNOcard.deckReset(cpuHand, playerHand)    
 
     
 

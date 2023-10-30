@@ -66,10 +66,13 @@ class UNOcard:
     
     def deckReset(hand1, hand2):
         deck = UNOcard.deckBuilder()
-        for cards in range(0, len(hand1)):
-            deck.remove(hand1[cards])
-        for cards in range(0, len(hand2)):
-            deck.remove(hand2[cards])
+        if(len(hand1) != 0):
+            for cards in range(0, len(hand1)):
+                removeCard = hand1[cards]
+                deck.remove(removeCard)
+        if(len(hand2) != 0):
+            for cards in range(0, len(hand2)):
+                deck.remove(hand2[cards])
         print("Deck is being reshuffled...")
         return deck
     
