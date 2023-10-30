@@ -23,7 +23,7 @@ while (gameOver == False):
 
     #output formated as [newCenter, newHand]
     #This section gets the results of what the player plays, makes it the center card and removes the card from the player's hand
-    #the if statements check if the player drew a card, if they did just set the new hand. if they didn't check to see if the card that was played was a draw 2 or draw 4
+    #the if statements check if the player drew a card, if they did just set the new hand. if they didn't check to see if the card that was played was a draw 2, draw 4 , etc...
     #Realistically, I could have made that a function but I got lazy. Same for the cpu section.
     if(playerSkipped == False):
         output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
@@ -39,7 +39,7 @@ while (gameOver == False):
                 print("You've +4'd the Computer!!")
                 for num in range(0,4):
                     cpuHand = UNOlogic.draw(deck, cpuHand)  
-            #In 1v1 Uno, a reverse is effectively a skip since it makes the turn order come back to you. At Least that my understand. 
+            #In 1v1 Uno, a reverse is effectively a skip since it makes the turn order come back to you. At Least that my understanding. 
             #Its either an effect skip or a card that has no effect. I opted in for it being another form of a skip
             elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
                     print("The Computer's turn has been skipped!")
