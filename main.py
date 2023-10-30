@@ -17,6 +17,7 @@ playerSkipped = False
 
 #Loop game till someone has no cards in their hand.
 while (gameOver == False):
+
     UNOcard.displayHand(playerHand)
     UNOlogic.displayCenter(centerCard)
 
@@ -48,6 +49,9 @@ while (gameOver == False):
     elif(playerSkipped == True):
          playerSkipped == False
 
+    if(len(playerHand) == 0 or playerHand == None):
+        print("You win!")
+        break
     
    
     #output formated as [newCenter, newHand]
@@ -73,7 +77,9 @@ while (gameOver == False):
     elif(cpuSkipped == True):
          cpuSkipped = False
 
-      
+    if(len(cpuHand) == 0 or cpuHand == None):
+      print("The Computer Wins!")
+      break
     
     
     #Game win Status Checks
@@ -86,14 +92,6 @@ while (gameOver == False):
         print("You only have 2 cards Left!")
     if(len(playerHand) == 1):
         print("You only have 1 card Left! You have UNO!")
-
-    #Game ender
-    if (len(playerHand) == 0 or len(cpuHand) == 0):
-        if(playerHand == 0):
-            print("You win!")
-        elif(cpuHand == 0):
-            print("The Computer Won!")
-        gameOver == True
 
     #Replenishes deck if it runs out
     if((len(deck) == 0)):
