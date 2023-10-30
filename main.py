@@ -32,11 +32,11 @@ while (gameOver == False):
             centerCard = newCenter
             if(UNOcard.getSpecial(newCenter) ==  ug.DRAW2):
                 print("You've +2'd the Computer!")
-                for num in range(0,2):
+                for num in range(2):
                     cpuHand = UNOlogic.draw(deck, cpuHand)
             elif(UNOcard.getSpecial(newCenter) ==  ug.WILD4):
                 print("You've +4'd the Computer!!")
-                for num in range(0,4):
+                for num in range(4):
                     cpuHand = UNOlogic.draw(deck, cpuHand)  
             #In 1v1 Uno, a reverse is effectively a skip since it makes the turn order come back to you. At Least thats my understanding. 
             #Its either an effect skip or a card that has no effect. I opted in for it being another form of a skip

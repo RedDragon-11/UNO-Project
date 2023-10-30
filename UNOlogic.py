@@ -59,9 +59,6 @@ class UNOlogic:
                     playerHand = playerHand.remove(card)
                     output = [card, playerHand]
                     return output
-                elif(UNOcard.getSpecial((playerHand[int(userInput) - 1])) == ug.DRAW2):
-                    for num in range(0,2):
-                        UNOlogic.draw(deck, cpuHand)
                 centerCard = playerHand[int(userInput)-1]
                 playerHand.remove(playerHand[int(userInput) - 1])
                 output = [centerCard, playerHand]
@@ -82,9 +79,6 @@ class UNOlogic:
                     card = UNOlogic.cpuSetWildCard()
                     output = [card, cpuHand]
                     return output
-                elif(UNOcard.getSpecial(cpuHand[cards]) == ug.DRAW2):
-                    for x in range(0,2):
-                        UNOlogic.draw(deck, playerHand)
                 elif(UNOcard.getSpecial(cpuHand[cards]) == ug.SKIP):
                     UNOlogic.cpuPlay(deck, centerCard, cpuHand, playerHand)
                 centerCard = cpuHand[cards]
