@@ -1,6 +1,4 @@
-#TODO Remove NONE Card Color and set it to just None
 #Card Colors
-NONE = 0
 RED = 1
 BLUE = 2
 GREEN = 3
@@ -8,7 +6,6 @@ YELLOW = 4
 
 #Dictionary for Card Colors
 cardColor = {
-    0: "Wild",
     1: "Red",
     2: "Blue",
     3: "Green",
