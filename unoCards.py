@@ -1,8 +1,6 @@
 import random
 import inspect
 import UNOGlobals as ug
-deck = []
-usedDeck = []
 
 class UNOcard:
 
@@ -65,10 +63,6 @@ class UNOcard:
             deck.append(UNOcard(ug.NONE, ug.WILD4, None))
 
         return deck
-   
-    def pullTopCard(deck):
-        newCard = deck[0]
-        return newCard
     
     def deckReset():
         deck = UNOcard.deckBuilder()
@@ -92,7 +86,18 @@ class UNOcard:
     def getSpecial(self):
         return self.special
     
-    def removeCard(card):
+    def removeCard(deck, card):
         deck.remove(card)
 
+print("Test of card Removal")
+deck = UNOcard.deckBuilder()
+print("initial deck Size: " + str(len(deck)))
+
+print("Removing Card...")
+playerCard = random.choice(deck)
+UNOcard.removeCard(deck, playerCard)
+
+print("Deck size after Removal Method: " + str(len(deck)))
+
+#print (UNOcard.getColor(playerCard) + " " + UNOcard.getValue(playerCard) + " " + UNOcard.getSpecial(playerCard))
   
