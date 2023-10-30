@@ -53,15 +53,16 @@ class UNOlogic:
                 return output
 
         elif(int(userInput) <= len(playerHand)):
-            if (UNOlogic.playableCard(centerCard, playerHand[int(userInput) - 1]) == True):
-                if(UNOcard.getSpecial(playerHand[int(userInput) - 1]) == ug.WILD or UNOcard.getSpecial(playerHand[int(userInput) - 1]) == ug.WILD4):
-                    removeCard = playerHand[int(userInput) - 1]
-                    playerHand = playerHand.remove(removeCard)
-                    card = UNOlogic.playerSetWildCard()
+            userInput = int(userInput) - 1
+            if (UNOlogic.playableCard(centerCard, playerHand[int(userInput)]) == True):
+                if(UNOcard.getColor(playerHand[int(userInput)]) == None):
+                    card = UNOlogic.playerSetWildCard(playerHand[int(userInput)])
+                    removeCard = playerHand[int(userInput)]
+                    playerHand.remove(removeCard)
                     output = [card, playerHand]
                     return output
-                centerCard = playerHand[int(userInput)-1]
-                playerHand.remove(playerHand[int(userInput) - 1])
+                centerCard = playerHand[int(userInput)]
+                playerHand.remove(playerHand[int(userInput)])
                 output = [centerCard, playerHand]
                 return output
             else:
@@ -80,7 +81,7 @@ class UNOlogic:
                 drawCard = False
                 #if the card selected is a wildcard
                 if(UNOcard.getColor(cpuHand[cards]) == None):
-                    card = UNOlogic.cpuSetWildCard()
+                    card = UNOlogic.cpuSetWildCard(cpuHand[cards])
                     removeCard = cpuHand[cards]
                     cpuHand.remove(removeCard)
                     output = [card, cpuHand]
@@ -102,18 +103,28 @@ class UNOlogic:
             hand.append(card)
             return hand
 
-    def cpuSetWildCard():
+    def cpuSetWildCard(card):
         randomColor = random.randint(1,4)
         print("The Computer has set the color to " + ug.cardColor[randomColor] + "!")
-        card = UNOcard(randomColor, ug.WILD, None)
-        return card
-
-    def playerSetWildCard():
-        userInput = input("Which color? 1 = Red 2 = Blue 3 = Green 4 = Yellow\n")
-        if(int(userInput) <= 4 and int(userInput) > 0):
-            print("You have set the color to " + ug.cardColor[int(userInput)])
-            card = UNOcard(int(userInput), ug.WILD, None)
+        if(UNOcard.getSpecial(card) == ug.WILD):
+            card = UNOcard(randomColor, ug.WILD, None)
             return card
+        elif(UNOcard.getSpecial(card) == ug.WILD4):
+            card = UNOcard(randomColor, ug.WILD4, None)
+            return card            
+
+    def playerSetWildCard(card):
+        userInput = input("Which color? 1 = Red 2 = Blue 3 = Green 4 = Yellow\n")
+        if(UNOcard.getSpecial(card) == ug.WILD):
+            if(int(userInput) <= 4 and int(userInput) > 0):
+                print("You have set the color to " + ug.cardColor[int(userInput)])
+                card = UNOcard(int(userInput), ug.WILD, None)
+                return card
+        elif(UNOcard.getSpecial(card) == ug.WILD4):
+            if(int(userInput) <= 4 and int(userInput) > 0):
+                print("You have set the color to " + ug.cardColor[int(userInput)])
+                card = UNOcard(int(userInput), ug.WILD4, None)
+                return card            
 
     def setCenterCard(deck):
         card = random.choice(deck)
