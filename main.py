@@ -11,8 +11,7 @@ gameOver = False
 deck = UNOcard.deckBuilder()
 playerHand = UNOlogic.drawStartingHand(deck)
 cpuHand = (UNOlogic.drawStartingHand(deck)) 
-cpuHand.append(UNOcard(ug.RED, ug.DRAW2, None))
-centerCard = UNOcard(ug.RED, ug.DRAW2, None)
+centerCard = UNOlogic.setCenterCard(deck)
 
 
 #Loop game till someone has no cards in their hand.
