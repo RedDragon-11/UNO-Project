@@ -56,6 +56,7 @@ class UNOcard:
         for yellowReverse in range(0,2):
             deck.append(UNOcard(ug.YELLOW, ug.REVERSE, None))
         
+        #TODO Change ug.NONE to just None
         #adding Wild cards to the Deck
         for wildcards in range (0,2):
             deck.append(UNOcard(ug.NONE, ug.WILD, None))
@@ -88,6 +89,22 @@ class UNOcard:
     
     def removeCard(deck, card):
         deck.remove(card)
+    
+    def displayHand(hand):
+        print("Your Current Hand: ")
+        for x in range(0,len(hand)):
+            #If the color is nothing. Display Special form Dictionary
+            if (UNOcard.getColor(hand[x]) == None):
+                print (ug.cardSpecials[UNOcard.getSpecial(hand[x])])
+
+            #if value is nothing. Display color form Dictionary + Special from Dictionary
+            elif (UNOcard.getValue(hand[x]) == None):
+                print (ug.cardColor[UNOcard.getColor(hand[x])] + " " +  ug.cardSpecials[UNOcard.getSpecial(hand[x])])
+                
+            #otherwise, display Color form Dictionary + Number
+            else:
+                print (ug.cardColor[UNOcard.getColor(hand[x])] + " " + str(UNOcard.getValue(hand[x])))
+
 
 
   
