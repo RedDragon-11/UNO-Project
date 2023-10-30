@@ -70,6 +70,7 @@ class UNOcard:
             deck.remove(hand1[cards])
         for cards in range(0, len(hand2)):
             deck.remove(hand2[cards])
+        print("Deck is being reshuffled...")
         return deck
     
     def setColor(self, color):

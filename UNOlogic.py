@@ -38,27 +38,40 @@ class UNOlogic:
         return hand
     
     #play function for human player
-    def play(deck, centerCard, playerHand):
+    def play(deck, centerCard, playerHand, cpuHand):
         userInput = (input("Which Card would you like to play?(must be a number or 'draw')\n"))
-        if (userInput.lower() == "draw"):
-             output = [None, UNOlogic.draw(deck, playerHand)]
-             return output
 
-        elif (UNOlogic.playableCard(centerCard, playerHand[int(userInput) - 1]) == True):
-            if(UNOcard.getSpecial(playerHand[int(userInput) - 1]) == ug.WILD or UNOcard.getSpecial(playerHand[int(userInput) - 1]) == ug.WILD4):
-                card = UNOlogic.playerSetWildCard()
-                output = [card, playerHand]
+
+
+        if (UNOlogic.isInteger(userInput) == False):
+            if (userInput.lower() == "draw"):
+                output = [None, UNOlogic.draw(deck, playerHand)]
                 return output
-            centerCard = playerHand[int(userInput)-1]
-            playerHand.remove(playerHand[int(userInput) - 1])
-            output = [centerCard, playerHand]
-            return output
-        
+            else:
+                print("Check Spelling of draw.")
+                output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
+                return output
+
+        elif(int(userInput) <= len(playerHand)):
+            if (UNOlogic.playableCard(centerCard, playerHand[int(userInput) - 1]) == True):
+                if(UNOcard.getSpecial(playerHand[int(userInput) - 1]) == ug.WILD or UNOcard.getSpecial(playerHand[int(userInput) - 1]) == ug.WILD4):
+                    card = UNOlogic.playerSetWildCard()
+                    output = [card, playerHand]
+                    return output
+                elif(UNOcard.getSpecial((playerHand[int(userInput) - 1])) == ug.DRAW2):
+                    for num in range(0,2):
+                        UNOlogic.draw(deck, cpuHand)
+                centerCard = playerHand[int(userInput)-1]
+                playerHand.remove(playerHand[int(userInput) - 1])
+                output = [centerCard, playerHand]
+                return output
+
         else:
-            print("Please only input Integers.")
-            UNOlogic.play(deck, centerCard, playerHand)
+            print("Please only input Valid Integers.")
+            output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
+            return output
     
-    def cpuPlay(deck, centerCard, cpuHand):
+    def cpuPlay(deck, centerCard, cpuHand, playerHand):
         for cards in range(0,len(cpuHand)):
             if(UNOlogic.playableCard(centerCard, cpuHand[cards]) == True):
                 #if the card selected is a wildcard
@@ -68,16 +81,18 @@ class UNOlogic:
                     return output
                 elif(UNOcard.getSpecial(cpuHand[cards]) == ug.DRAW2):
                     for x in range(0,2):
-                        pass
+                        UNOlogic.draw(deck, playerHand)
                 elif(UNOcard.getSpecial(cpuHand[cards]) == ug.SKIP):
-                    UNOlogic.cpuPlay(deck, centerCard, cpuHand)
+                    UNOlogic.cpuPlay(deck, centerCard, cpuHand, playerHand)
                 centerCard = cpuHand[cards]
                 cpuHand.remove(cpuHand[cards])
                 output = [centerCard, cpuHand]
+                UNOlogic.displayCard(centerCard)
                 return output
             
             else:
                 output = [None, UNOlogic.draw(deck, cpuHand)]
+                print("The Computer Has Drawn a Card!\n")
                 return output
 
     def draw(deck, hand):
@@ -96,7 +111,7 @@ class UNOlogic:
         userInput = input("Which color? 1. Red 2. Blue 3. Green 4. Yellow")
         if(int(userInput) <= 4 and int(userInput) != 0):
             print("You have sent the color to " + ug.cardColor[int(userInput)])
-            card = UNOcard(userInput, None, None)
+            card = UNOcard(int(userInput), ug.WILD, None)
             return card
 
     def setCenterCard(deck):
@@ -117,6 +132,28 @@ class UNOlogic:
         #otherwise, display Color form Dictionary + Number
         else:
             print (ug.cardColor[UNOcard.getColor(card)] + " " + str(UNOcard.getValue(card)))
+    
+    def displayCard(card):
+        print("The Computer has played a: ")
+        #If the color is nothing. Display Special form Dictionary
+        if (UNOcard.getColor(card) == None):
+            print (ug.cardSpecials[UNOcard.getSpecial(card) + "\n"])
+
+        #if value is nothing. Display color form Dictionary + Special from Dictionary
+        elif (UNOcard.getSpecial(card) > ug.GENERAL):
+            print (ug.cardColor[UNOcard.getColor(card)] + " " +  ug.cardSpecials[UNOcard.getSpecial(card)] + "\n")
+                
+        #otherwise, display Color form Dictionary + Number
+        else:
+            print (ug.cardColor[UNOcard.getColor(card)] + " " + str(UNOcard.getValue(card)) + "\n")
+    
+    def isInteger(input):
+        try:
+            int(input)
+            return True
+        except:
+            return False
+
 
         
          

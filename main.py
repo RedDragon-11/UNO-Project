@@ -17,17 +17,17 @@ centerCard = UNOlogic.setCenterCard(deck)
 while (gameOver == False):
     UNOcard.displayHand(playerHand)
     UNOlogic.displayCenter(centerCard)
-    output = UNOlogic.play(deck, centerCard, playerHand)
+    output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
 
     if (output[0] != None):
         centerCard = output[0]
     palyerHand = output[1]
     
-    cpuOutput = UNOlogic.cpuPlay(deck, centerCard, cpuHand)
+    cpuOutput = UNOlogic.cpuPlay(deck, centerCard, cpuHand, playerHand)
     if (cpuOutput[0] != None):
         centerCard = cpuOutput[0]
     cpuHand = cpuOutput[1]
-
+    
     #Game win Status Checks
     if(len(cpuHand) == 2):
         print("The Computer only has 2 cards Left!")
@@ -46,7 +46,6 @@ while (gameOver == False):
     #game ender
     if (len(playerHand) == 0 or len(cpuHand) == 0):
         gameOver == True
-
     
 
     
