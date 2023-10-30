@@ -72,8 +72,11 @@ class UNOlogic:
             return output
     
     def cpuPlay(deck, centerCard, cpuHand, playerHand):
-        for cards in range(0,len(cpuHand)):
+        drawCard = True
+        for cards in range(0, len(cpuHand)):
+            print("loop numer: " + str(cards))
             if(UNOlogic.playableCard(centerCard, cpuHand[cards]) == True):
+                drawCard = False
                 #if the card selected is a wildcard
                 if(UNOcard.getColor(cpuHand[cards]) == None):
                     card = UNOlogic.cpuSetWildCard()
@@ -90,10 +93,10 @@ class UNOlogic:
                 UNOlogic.displayCard(centerCard)
                 return output
             
-            else:
-                output = [None, UNOlogic.draw(deck, cpuHand)]
-                print("The Computer Has Drawn a Card!\n")
-                return output
+        if(drawCard == True):
+            output = [None, UNOlogic.draw(deck, cpuHand)]
+            print("The Computer Has Drawn a Card!\n")
+            return output
 
     def draw(deck, hand):
             card = random.choice(deck)
