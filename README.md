@@ -7,3 +7,6 @@ As a warning, some cards might not function properly (i.e. Draws and Skips). I a
 1. Make sure you have Python installed (pretty sure it must be at least Python 3)
 2. Right Click main.py and open with Python
 3. Enjoy my simplistic little 1v1 Uno Project!
+
+####-----KNOWN ISSUES------####
+If the first card set as Center is a wild card, playing any card will crash the game
