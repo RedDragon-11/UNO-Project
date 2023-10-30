@@ -84,7 +84,7 @@ while (gameOver == False):
     
     if(len(playerHand) == 2):
         print("You only have 2 cards Left!")
-    if(len(palyerHand) == 1):
+    if(len(playerHand) == 1):
         print("You only have 1 card Left! You have UNO!")
 
     #Game ender
