@@ -128,8 +128,11 @@ class UNOlogic:
 
     def setCenterCard(deck):
         card = random.choice(deck)
-        UNOcard.removeCard(deck, card)
-        return card
+        if(UNOcard.getSpecial(card) != ug.WILD or UNOcard.getSpecial(card) != ug.WILD4):
+            UNOcard.removeCard(deck, card)
+            return card
+        else:
+           return UNOlogic.setCenterCard(deck)
     
     def displayCenter(card):
         print("Current Card: ")
@@ -165,7 +168,6 @@ class UNOlogic:
             return True
         except:
             return False
-
 
         
          
