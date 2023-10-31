@@ -20,7 +20,7 @@ while (gameOver == False):
     #the if statements check if the player drew a card, if they did just set the new hand. if they didn't check to see if the card that was played was a draw 2, draw 4 , etc...
     #Realistically, I could have made that a function but I got lazy. Same for the cpu section.
     if(skipped == False):
-        UNOcard.displayHand(playerHand)
+        UNOlogic.displayHand(playerHand)
         UNOlogic.displayCenter(centerCard)
         output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
         newCenter = output[0]
