@@ -42,11 +42,12 @@ while (gameOver == False):
             #A really Odd Error has Occured. Player skips does nothing. Cpu skips skip you indefinitely
             elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
                 print("The Computer's turn has been skipped!")
-                skipped == True
+                skipped = True
         palyerHand = newHand
     else:
-        skipped == False
-
+        skipped = False
+    
+    
     if(len(playerHand) == 0 or playerHand == None):
         print("You win!")
         break
@@ -54,6 +55,7 @@ while (gameOver == False):
    
     #output formated as [newCenter, newHand]
     #This section gets the results of what the cpu plays, makes it the center card and removes the card from the cpus's hand
+    
     if(skipped == False):
         cpuOutput = UNOlogic.cpuPlay(deck, centerCard, cpuHand, playerHand)
         newCenter = cpuOutput[0]
@@ -98,12 +100,12 @@ while (gameOver == False):
 
 userInput = input("Would you want to play again?(y/n)")
 
-if(userInput.lower == 'y'):
-    input("Then you'll need to close and reopen the file. I was planning on using recursion to loop the game but got lazy. I am sorry.")
-elif(userInput.lower == 'n'):
-    input("Press any button to close window.")
+if(userInput.lower() == 'y'):
+    input("Then you'll need to close and reopen the file. I was planning on using recursion to loop the game but got lazy. I am sorry. Press enter to close window.")
+elif(userInput.lower() == 'n'):
+    input("Press enter to close window.")
 else:
-    input("I didn't quite catch that... I guess... Press any button to close window.")
+    input("I didn't quite catch that... I guess... Press enter to close window.")
 
 
     
