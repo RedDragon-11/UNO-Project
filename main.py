@@ -8,24 +8,20 @@ centerCard = UNOlogic.setCenterCard(deck)
 playerHand = UNOlogic.drawStartingHand(deck)
 cpuHand = UNOlogic.drawStartingHand(deck)
 gameOver = False
-cpuSkipped = False
-playerSkipped = False
-
-
-
-
+skipped = False
 
 #Loop game till someone has no cards in their hand.
 while (gameOver == False):
 
-    UNOcard.displayHand(playerHand)
-    UNOlogic.displayCenter(centerCard)
+
 
     #output formated as [newCenter, newHand]
     #This section gets the results of what the player plays, makes it the center card and removes the card from the player's hand
     #the if statements check if the player drew a card, if they did just set the new hand. if they didn't check to see if the card that was played was a draw 2, draw 4 , etc...
     #Realistically, I could have made that a function but I got lazy. Same for the cpu section.
-    if(playerSkipped == False):
+    if(skipped == False):
+        UNOcard.displayHand(playerHand)
+        UNOlogic.displayCenter(centerCard)
         output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
         newCenter = output[0]
         newHand = output[1]
@@ -44,12 +40,12 @@ while (gameOver == False):
             #In 1v1 Uno, a reverse is effectively a skip since it makes the turn order come back to you. At Least thats my understanding. 
             #Its either an effect skip or a card that has no effect. I opted in for it being another form of a skip
             #A really Odd Error has Occured. Player skips does nothing. Cpu skips skip you indefinitely
-            #elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
-                #print("The Computer's turn has been skipped!")
-                #cpuSkipped == True
+            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
+                print("The Computer's turn has been skipped!")
+                skipped == True
         palyerHand = newHand
-    elif(playerSkipped == True):
-         playerSkipped == False
+    else:
+        skipped == False
 
     if(len(playerHand) == 0 or playerHand == None):
         print("You win!")
@@ -58,7 +54,7 @@ while (gameOver == False):
    
     #output formated as [newCenter, newHand]
     #This section gets the results of what the cpu plays, makes it the center card and removes the card from the cpus's hand
-    if(cpuSkipped == False):
+    if(skipped == False):
         cpuOutput = UNOlogic.cpuPlay(deck, centerCard, cpuHand, playerHand)
         newCenter = cpuOutput[0]
         newHand = cpuOutput[1]
@@ -72,12 +68,12 @@ while (gameOver == False):
                 print("You've Been +4'd!!")
                 for num in range(4):
                     playerHand = UNOlogic.draw(deck, playerHand) 
-            #elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
-                #print("Your turn has been skipped!")
-                #playerSkipped = True
+            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
+                print("Your turn has been skipped!")
+                skipped = True
         cpuHand = newHand
-    elif(cpuSkipped == True):
-         cpuSkipped = False
+    else:
+        skipped = False
 
     if(len(cpuHand) == 0 or cpuHand == None):
       print("The Computer Wins!")
@@ -97,7 +93,18 @@ while (gameOver == False):
 
     #Replenishes deck if it runs out
     if((len(deck) == 0)):
-        deck = UNOcard.deckReset(cpuHand, playerHand)    
+        deck = UNOcard.deckReset(cpuHand, playerHand)
+
+
+userInput = input("Would you want to play again?(y/n)")
+
+if(userInput.lower == 'y'):
+    input("Then you'll need to close and reopen the file. I was planning on using recursion to loop the game but got lazy. I am sorry.")
+elif(userInput.lower == 'n'):
+    input("Press any button to close window.")
+else:
+    input("I didn't quite catch that... I guess... Press any button to close window.")
+
 
     
 
