@@ -95,6 +95,9 @@ class UNOcard:
     
     def getSpecial(self):
         return self.special
+
+    def getImage(self):
+        return self.img
     
     def removeCard(deck, card):
         deck.remove(card)

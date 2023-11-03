@@ -2,7 +2,7 @@ from UNOcard import UNOcard
 import UNOGlobals as ug
 import random
 
-#TODO rework the playableCard Function with the reminder that cardColors NONE isn't real
+
 class UNOlogic:
     
     def playableCard(centerCard, playedCard):
