@@ -25,12 +25,10 @@ cpuDrawTwoText = font.render("You've Been +2'd!", False, 'White')
 cpuDrawFourText = font.render("You've Been +4'd!", False, 'White')
 
 index = 0
-
 #Starting Variables
 deck = UNOcard.deckBuilder()
 centerCard = UNOlogic.setCenterCard(deck)
 playerHand = UNOlogic.drawStartingHand(deck)
-playerHand.append(UNOcard(None, ug.WILD4, None, "small/wild_pick_four.png"))
 cpuHand = UNOlogic.drawStartingHand(deck)
 skipped = False
 turn = 0
@@ -109,14 +107,20 @@ while True:
                 centerCard = UNOcard(4, ug.WILD4, None, "small/4_w4.png")
                 wild4Placed = False
 
+        silhouette = pg.Rect(index * 100, 400, 136, 192)
+        if (index <= 9):
+            pg.draw.rect(screen, 'Purple', silhouette)
+        else:
+            silhouette = pg.Rect((index-10) * 100, 600, 136, 192)
+            pg.draw.rect(screen, 'Purple', silhouette)
         screen.blit(centerCardText, (1130, 400))
         screen.blit(UNOcard.getImage(centerCard), (1200, 450))
         screen.blit(handText, (300, 300))
         for cards in range(0, len(playerHand)):
-            if (cards <= 10):
+            if (cards <= 9):
                 screen.blit(UNOcard.getImage(playerHand[cards]), (100 * cards, 400))
-            if (cards > 10):
-                screen.blit(UNOcard.getImage(playerHand[cards]), (100 * (cards-10), 580))
+            if (cards >= 10):
+                screen.blit(UNOcard.getImage(playerHand[cards]), (100 * (cards-10), 600))
 
 
 
