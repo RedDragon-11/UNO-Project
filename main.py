@@ -193,5 +193,8 @@ while True:
         winText = font2.render("THE COMPUTER WINS!", False, 'White')
         screen.blit(winText, (800, 100))
 
+    if len(deck) == 0 or deck == None:
+        deck = UNOcard.deckBuilder()
+
     pg.display.update()
     clock.tick(9999)
