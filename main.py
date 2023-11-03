@@ -39,7 +39,6 @@ while (gameOver == False):
                 print("The Computer now has: " + str(len(cpuHand)) + " Cards.")
             #In 1v1 Uno, a reverse is effectively a skip since it makes the turn order come back to you. At Least thats my understanding. 
             #Its either an effect skip or a card that has no effect. I opted in for it being another form of a skip
-            #A really Odd Error has Occured. Player skips does nothing. Cpu skips skip you indefinitely
             elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
                 print("The Computer's turn has been skipped!")
                 skipped = True
@@ -55,7 +54,6 @@ while (gameOver == False):
    
     #output formated as [newCenter, newHand]
     #This section gets the results of what the cpu plays, makes it the center card and removes the card from the cpus's hand
-    
     if(skipped == False):
         cpuOutput = UNOlogic.cpuPlay(deck, centerCard, cpuHand, playerHand)
         newCenter = cpuOutput[0]
