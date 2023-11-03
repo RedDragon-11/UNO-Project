@@ -81,8 +81,9 @@ class UNOlogic:
             card = UNOcard(randomColor, ug.WILD4, None, ("small/" + str(randomColor) + "_w4.png"))
             return card            
 
-    def playerSetWildCard(card):
-        a = 1
+   # def playerSetWildCard(card):
+
+
 
     def setCenterCard(deck):
         card = random.choice(deck)
