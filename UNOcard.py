@@ -4,11 +4,14 @@ import UNOGlobals as ug
 
 class UNOcard:
 
+
     def __init__(self, c, s, v, filename):
         self.color = c
         self.special = s
         self.value = v
         self.img = pg.image.load(filename)
+
+
 
     def deckBuilder():
         deck = []
@@ -34,7 +37,7 @@ class UNOcard:
             deck.append(UNOcard(ug.BLUE, ug.DRAW2, None, "small/blue_picker.png"))
         for blueReverse in range (0,2):
             deck.append(UNOcard(ug.BLUE, ug.REVERSE, None, "small/blue_reverse.png"))
-                   
+
         #adding Green Cards to the Deck
         for greenCards in range(0,2):
             for cardNum in range(0,10):
@@ -56,7 +59,7 @@ class UNOcard:
             deck.append(UNOcard(ug.YELLOW, ug.DRAW2, None, "small/yellow_picker.png"))
         for yellowReverse in range(0,2):
             deck.append(UNOcard(ug.YELLOW, ug.REVERSE, None, "small/yellow_reverse.png"))
-        
+
         #adding Wild cards to the Deck
         for wildcards in range (0,2):
             deck.append(UNOcard(None, ug.WILD, None, "small/wild_color_changer.png"))
@@ -64,8 +67,10 @@ class UNOcard:
             deck.append(UNOcard(None, ug.WILD4, None, "small/wild_pick_four.png"))
 
         return deck
-    
+
+
     def deckReset(hand1, hand2):
+
         deck = UNOcard.deckBuilder()
 
         if(len(hand1) != 0):

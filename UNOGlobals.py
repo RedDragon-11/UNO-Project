@@ -1,3 +1,4 @@
+import pygame as pg
 #Card Colors
 RED = 1
 BLUE = 2
@@ -28,3 +29,4 @@ cardSpecials = {
     4: "Skip",
     5: "Reverse",
 }
+

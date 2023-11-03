@@ -1,6 +1,7 @@
 from UNOcard import UNOcard
 import UNOGlobals as ug
 import random
+import pygame as pg
 
 
 class UNOlogic:
@@ -38,43 +39,10 @@ class UNOlogic:
         return hand
     
     #play function for human player
-    def play(deck, centerCard, playerHand, cpuHand):
-        userInput = (input("Which Card would you like to play?(must be a number or 'draw')\n"))
-
-
-
-        if (UNOlogic.isInteger(userInput) == False):
-            if (userInput.lower() == "draw"):
-                output = [None, UNOlogic.draw(deck, playerHand)]
-                return output
-            else:
-                print("Check Spelling of draw.")
-                output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
-                return output
-
-        elif(int(userInput) <= len(playerHand)):
-            userInput = int(userInput) - 1
-            if (UNOlogic.playableCard(centerCard, playerHand[int(userInput)]) == True):
-                if(UNOcard.getColor(playerHand[int(userInput)]) == None):
-                    card = UNOlogic.playerSetWildCard(playerHand[int(userInput)])
-                    removeCard = playerHand[int(userInput)]
-                    playerHand.remove(removeCard)
-                    output = [card, playerHand]
-                    return output
-                centerCard = playerHand[int(userInput)]
-                playerHand.remove(playerHand[int(userInput)])
-                output = [centerCard, playerHand]
-                return output
-            else:
-                print("Card is not Playable.")
-                output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
-                return output
-        else:
-            print("Please only input Valid Integers.")
-            output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
-            return output
+    #def play(centerCard, playerHand):
+    #    a = 1
     
-    def cpuPlay(deck, centerCard, cpuHand, playerHand):
+    def cpuPlay(deck, centerCard, cpuHand):
         drawCard = True
         for cards in range(0, len(cpuHand)):
             if(UNOlogic.playableCard(centerCard, cpuHand[cards]) == True):
@@ -107,28 +75,18 @@ class UNOlogic:
         randomColor = random.randint(1,4)
         print("The Computer has set the color to " + ug.cardColor[randomColor] + "!")
         if(UNOcard.getSpecial(card) == ug.WILD):
-            card = UNOcard(randomColor, ug.WILD, None)
+            card = UNOcard(randomColor, ug.WILD, None, "small/" + str(randomColor) + "_w.png")
             return card
         elif(UNOcard.getSpecial(card) == ug.WILD4):
-            card = UNOcard(randomColor, ug.WILD4, None)
+            card = UNOcard(randomColor, ug.WILD4, None, ("small/" + str(randomColor) + "_w4.png"))
             return card            
 
     def playerSetWildCard(card):
-        userInput = input("Which color? 1 = Red 2 = Blue 3 = Green 4 = Yellow\n")
-        if(UNOcard.getSpecial(card) == ug.WILD):
-            if(int(userInput) <= 4 and int(userInput) > 0):
-                print("You have set the color to " + ug.cardColor[int(userInput)])
-                card = UNOcard(int(userInput), ug.WILD, None)
-                return card
-        elif(UNOcard.getSpecial(card) == ug.WILD4):
-            if(int(userInput) <= 4 and int(userInput) > 0):
-                print("You have set the color to " + ug.cardColor[int(userInput)])
-                card = UNOcard(int(userInput), ug.WILD4, None)
-                return card            
+        a = 1
 
     def setCenterCard(deck):
         card = random.choice(deck)
-        if(UNOcard.getSpecial(card) != ug.WILD or UNOcard.getSpecial(card) != ug.WILD4):
+        if(UNOcard.getColor(card) != None):
             UNOcard.removeCard(deck, card)
             return card
         else:

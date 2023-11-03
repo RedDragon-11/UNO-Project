@@ -1,135 +1,134 @@
+import pygame.display
+
 from UNOcard import UNOcard
 from UNOlogic import UNOlogic
 import UNOGlobals as ug
 import pygame as pg
-from UNOdisplay import UNOdisplay
-global screen
 pg.init()
-
 
 window = screen_width, screen_height = 1600, 900
 screen = pg.display.set_mode(window)
-screen.fill('black')
+pg.display.set_caption("UNO!")
+screen.fill((39, 119, 20))
 clock = pg.time.Clock()
+font = pg.font.Font(None, 40)
+font2 = pg.font.Font(None, 56)
+centerCardText = font.render('Current Center Card', False, 'White')
+handText = font.render('Your Hand', False, 'White')
+skipText = font.render("You Skipped The Computer!", False, 'White')
+drawTwoText = font.render("You +2'd The Computer!", False, 'White')
+drawFourText = font.render("You +4'd The Computer!", False, 'White')
+cpuSkipText = font.render("You've Been Skipped!", False, 'White')
+cpuDrawTwoText = font.render("You've Been +2'd!", False, 'White')
+cpuDrawFourText = font.render("You've Been +4'd!", False, 'White')
+index = 0
 
 #Starting Variables
 deck = UNOcard.deckBuilder()
 centerCard = UNOlogic.setCenterCard(deck)
 playerHand = UNOlogic.drawStartingHand(deck)
 cpuHand = UNOlogic.drawStartingHand(deck)
-gameOver = False
 skipped = False
+turn = 0
+cpuTurn = 0
 
 #Loop game till someone has no cards in their hand.
-while (gameOver == False):
+while True:
+    selected = 0
     for event in pg.event.get():
         if event.type == pg.QUIT:
-            quit()
-            break
+            pg.quit()
+            exit()
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_ESCAPE:
-                quit()
-                break
+            if event.key == pg.K_w:
+                print("W")
+                if(index < len(playerHand)):
+                    selected = index
+                    print(str(UNOcard.getColor(playerHand[selected])) + " " + str(UNOcard.getValue(playerHand[selected])) + " " + str(UNOcard.getSpecial(playerHand[selected])))
+                    index = 0
+                    turn = 1
+                else:
+                    index = 0
+            if event.key == pg.K_a:
+                screen.fill((39, 119, 20))
+                print("A")
+                if index > 0:
+                    index -= 1
+                print("Index: " + str(index))
+            if event.key == pg.K_d:
+                screen.fill((39, 119, 20))
+                print("D")
+                if (index < len(playerHand)-1):
+                    index += 1
+                print("Index: " + str(index))
+            if event.key == pg.K_s:
+                screen.fill((39, 119, 20))
+                print("S")
+                playerHand = UNOlogic.draw(deck, playerHand)
+                cpuTurn = 1
 
 
-    #output formated as [newCenter, newHand]
-    #This section gets the results of what the player plays, makes it the center card and removes the card from the player's hand
-    #the if statements check if the player drew a card, if they did just set the new hand. if they didn't check to see if the card that was played was a draw 2, draw 4 , etc...
-    #Realistically, I could have made that a function but I got lazy. Same for the cpu section.
-    if(skipped == False):
-        UNOdisplay.draw_hand_visble(playerHand, centerCard, screen)
-        output = UNOlogic.play(deck, centerCard, playerHand, cpuHand)
+        screen.blit(centerCardText, (1130, 400))
+        screen.blit(UNOcard.getImage(centerCard), (1200, 450))
+        screen.blit(handText, (300, 300))
+        for cards in range(0, len(playerHand)):
+            if (cards <= 10):
+                screen.blit(UNOcard.getImage(playerHand[cards]), (100 * cards, 400))
+            if (cards > 10):
+                screen.blit(UNOcard.getImage(playerHand[cards]), (100 * (cards-10), 580))
+
+
+
+
+    if turn == 1:
+        if (UNOlogic.playableCard(centerCard, playerHand[selected]) == True):
+            screen.fill((39, 119, 20))
+            newCenter = playerHand[selected]
+            if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
+                screen.blit(drawTwoText, (800, 200))
+                for val in range(0,2):
+                    cpuHand = UNOlogic.draw(deck, cpuHand)
+            elif(UNOcard.getSpecial(newCenter) == ug.WILD4):
+                screen.blit(drawFourText, (800, 200))
+                for val in range(0, 4):
+                    cpuHand = UNOlogic.draw(deck, cpuHand)
+            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE):
+                screen.blit(skipText, (800, 200))
+                cpuTurn = 0
+            else:
+                cpuTurn = 1
+            playerHand.remove(playerHand[selected])
+            centerCard = newCenter
+            UNOlogic.displayHand(playerHand)
+            turn = 0
+    elif cpuTurn == 1:
+        cpuTurn = 0
+        output = UNOlogic.cpuPlay(deck, centerCard, cpuHand)
         newCenter = output[0]
         newHand = output[1]
-        if (newCenter != None):
+        if newCenter != None:
             centerCard = newCenter
-            if(UNOcard.getSpecial(newCenter) ==  ug.DRAW2):
-                print("You've +2'd the Computer!")
-                for num in range(2):
-                    cpuHand = UNOlogic.draw(deck, cpuHand)
-                print("The Computer now has: " + str(len(cpuHand)) + " Cards.")
-            elif(UNOcard.getSpecial(newCenter) ==  ug.WILD4):
-                print("You've +4'd the Computer!!")
-                for num in range(4):
-                    cpuHand = UNOlogic.draw(deck, cpuHand)  
-                print("The Computer now has: " + str(len(cpuHand)) + " Cards.")
-            #In 1v1 Uno, a reverse is effectively a skip since it makes the turn order come back to you. At Least thats my understanding. 
-            #Its either an effect skip or a card that has no effect. I opted in for it being another form of a skip
-            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
-                print("The Computer's turn has been skipped!")
-                skipped = True
-        palyerHand = newHand
-    else:
-        skipped = False
-    
-    
-    if(len(playerHand) == 0 or playerHand == None):
-        print("You win!")
-        quit()
-        break
-    
-   
-    #output formated as [newCenter, newHand]
-    #This section gets the results of what the cpu plays, makes it the center card and removes the card from the cpus's hand
-    if(skipped == False):
-        cpuOutput = UNOlogic.cpuPlay(deck, centerCard, cpuHand, playerHand)
-        newCenter = cpuOutput[0]
-        newHand = cpuOutput[1]
-        if (newCenter != None):
-            centerCard = newCenter
-            if(UNOcard.getSpecial(newCenter) ==  ug.DRAW2):
-                print("You've Been +2'd!")
-                for num in range(2):
+            if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
+                screen.blit(cpuDrawTwoText, (800, 200))
+                for val in range(0,2):
                     playerHand = UNOlogic.draw(deck, playerHand)
-            elif(UNOcard.getSpecial(newCenter) ==  ug.WILD4):
-                print("You've Been +4'd!!")
-                for num in range(4):
-                    playerHand = UNOlogic.draw(deck, playerHand) 
-            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE): 
-                print("Your turn has been skipped!")
-                skipped = True
+            elif(UNOcard.getSpecial(newCenter) == ug.WILD4):
+                screen.blit(cpuDrawFourText, (800, 200))
+                for val in range(0, 4):
+                    playerHand = UNOlogic.draw(deck, playerHand)
+            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE):
+                screen.blit(cpuSkipText, (800, 200))
+                cpuTurn = 1
+
         cpuHand = newHand
-    else:
-        skipped = False
-
-    if(len(cpuHand) == 0 or cpuHand == None):
-      print("The Computer Wins!")
-      break
-    
-    
-    #Game win Status Checks
-    if(len(cpuHand) == 2):
-        print("The Computer only has 2 cards Left!")
-    if(len(cpuHand) == 1):
-        print("The Computer only has 1 card Left! They have UNO!")
-    
-    if(len(playerHand) == 2):
-        print("You only have 2 cards Left!")
-    if(len(playerHand) == 1):
-        print("You only have 1 card Left! You have UNO!")
-
-    #Replenishes deck if it runs out
-    if((len(deck) == 0)):
-        deck = UNOcard.deckReset(cpuHand, playerHand)
-    clock.tick(60)
-
-userInput = input("Would you want to play again?(y/n)")
-
-if(userInput.lower() == 'y'):
-    input("Then you'll need to close and reopen the file. I was planning on using recursion to loop the game but got lazy. I am sorry. Press enter to close window.")
-elif(userInput.lower() == 'n'):
-    input("Press enter to close window.")
-else:
-    input("I didn't quite catch that... I guess... Press enter to close window.")
 
 
-    
+    if len(playerHand) == 0 or playerHand == None:
+        winText = font2.render("YOU WIN!", False, 'White')
+        screen.blit(winText, (800, 100))
+    elif len(cpuHand) == 0 or cpuHand == None:
+        winText = font2.render("THE COMPUTER WINS!", False, 'White')
+        screen.blit(winText, (800, 100))
 
-
-   
-
-
-        
-    
-
-
+    pg.display.update()
+    clock.tick(120)
