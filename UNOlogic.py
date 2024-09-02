@@ -42,14 +42,14 @@ class UNOlogic:
     #def play(centerCard, playerHand):
     #    a = 1
     
-    def cpuPlay(deck, centerCard, cpuHand):
+    def cpuPlay(deck, centerCard, cpuHand, position):
         drawCard = True
         for cards in range(0, len(cpuHand)):
             if(UNOlogic.playableCard(centerCard, cpuHand[cards]) == True):
                 drawCard = False
                 #if the card selected is a wildcard
                 if(UNOcard.getColor(cpuHand[cards]) == None):
-                    card = UNOlogic.cpuSetWildCard(cpuHand[cards])
+                    card = UNOlogic.cpuSetWildCard(cpuHand, cpuHand[cards])
                     removeCard = cpuHand[cards]
                     cpuHand.remove(removeCard)
                     output = [card, cpuHand]
@@ -62,7 +62,7 @@ class UNOlogic:
     
         if(drawCard == True):
             output = [None, UNOlogic.draw(deck, cpuHand)]
-            print("The Computer Has Drawn a Card!\n")
+            print("Computer #" + str(position - 1) + " Has Drawn a Card!")
             return output
 
     def draw(deck, hand):
@@ -71,14 +71,50 @@ class UNOlogic:
             hand.append(card)
             return hand
 
-    def cpuSetWildCard(card):
-        randomColor = random.randint(1,4)
-        print("The Computer has set the color to " + ug.cardColor[randomColor] + "!")
+    def cpuSetWildCard(cpuHand, card):
+        red = 0
+        blue = 0
+        green = 0
+        yellow = 0
+        highest = 0
+        color = 0
+        skip = 0
+        list = []
+
+        #counts the color of highest amount in hand.
+        for cards in range(0, len(cpuHand)):
+            print("Reds: " + str(red))
+            print("Blues: " + str(blue))
+            print("Greens: " + str(green))
+            print("Yellows: " + str(yellow))
+            if ((UNOcard.getColor(cpuHand[cards]) == ug.RED)):
+                red += 1
+            elif ((UNOcard.getColor(cpuHand[cards]) == ug.BLUE)):
+                blue += 1
+            elif ((UNOcard.getColor(cpuHand[cards]) == ug.GREEN)):
+                green += 1
+            elif ((UNOcard.getColor(cpuHand[cards]) == ug.YELLOW)):
+                yellow += 1
+            else:
+                randomColor = random.randint(1, 4)
+                color = randomColor
+                skip = 1
+        
+        if skip == 0:
+            list.append(red)
+            list.append(blue)
+            list.append(green)
+            list.append(yellow)
+            for var in range(0,4):
+                if (list[var] > highest):
+                    color = (var + 1)
+
+        print("The Computer has set the color to " + ug.cardColor[color] + "!")
         if(UNOcard.getSpecial(card) == ug.WILD):
-            card = UNOcard(randomColor, ug.WILD, None, "small/" + str(randomColor) + "_w.png")
+            card = UNOcard(color, ug.WILD, None, "small/" + str(color) + "_w.png")
             return card
         elif(UNOcard.getSpecial(card) == ug.WILD4):
-            card = UNOcard(randomColor, ug.WILD4, None, ("small/" + str(randomColor) + "_w4.png"))
+            card = UNOcard(color, ug.WILD4, None, ("small/" + str(color) + "_w4.png"))
             return card            
 
    # def playerSetWildCard(card):

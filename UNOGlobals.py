@@ -1,5 +1,6 @@
 import pygame as pg
 #Card Colors
+NONE = None
 RED = 1
 BLUE = 2
 GREEN = 3
@@ -7,6 +8,7 @@ YELLOW = 4
 
 #Dictionary for Card Colors
 cardColor = {
+    None: "Wild",
     1: "Red",
     2: "Blue",
     3: "Green",

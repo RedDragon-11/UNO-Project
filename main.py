@@ -24,19 +24,30 @@ cpuSkipText = font.render("You've Been Skipped!", False, 'White')
 cpuDrawTwoText = font.render("You've Been +2'd!", False, 'White')
 cpuDrawFourText = font.render("You've Been +4'd!", False, 'White')
 
-index = 0
 #Starting Variables
+index = 0
+selected = 0
+playerCount = 2 
 deck = UNOcard.deckBuilder()
 centerCard = UNOlogic.setCenterCard(deck)
 playerHand = UNOlogic.drawStartingHand(deck)
 cpuHand = UNOlogic.drawStartingHand(deck)
+if playerCount == 3:
+    cpuHand2 = UNOlogic.drawStartingHand(deck)
+if playerCount == 4:
+    cpuHand3 = UNOlogic.drawStartingHand(deck)
 skipped = False
 turn = 0
-cpuTurn = 0
+skip = 0
+winCondition = 0
 colorChoice = None
 wildPlaced = False
 wild4Placed = False
 
+
+
+
+print(turn)
 #Loop game till someone has no cards in their hand.
 while True:
     selected = 0
@@ -45,13 +56,20 @@ while True:
             pg.quit()
             exit()
         if event.type == pg.KEYDOWN:
+            if winCondition == 1:
+                pg.quit()
+                exit() 
             if event.key == pg.K_w:
                 print("W")
                 if(index < len(playerHand)):
-                    selected = index
-                    print(str(UNOcard.getColor(playerHand[selected])) + " " + str(UNOcard.getValue(playerHand[selected])) + " " + str(UNOcard.getSpecial(playerHand[selected])))
-                    index = 0
-                    turn = 1
+                    if skip == 0:
+                        selected = index
+                        print(ug.cardColor[UNOcard.getColor(playerHand[selected])] + " " + str(UNOcard.getValue(playerHand[selected])) + " " + ug.cardSpecials[UNOcard.getSpecial(playerHand[selected])])
+                        index = 0
+                        turn += 1
+                    else:
+                        turn += 1
+                    
                 else:
                     index = 0
             if event.key == pg.K_a:
@@ -71,8 +89,7 @@ while True:
                 print("S")
                 playerHand = UNOlogic.draw(deck, playerHand)
                 index = 0
-                turn = 0
-                cpuTurn = 1
+                turn += 1
             if event.key == pg.K_1:
                 colorChoice = 1
             if event.key == pg.K_2:
@@ -84,28 +101,35 @@ while True:
             if (colorChoice == 1 and wildPlaced == True):
                 centerCard = UNOcard(1, ug.WILD, None, "small/1_w.png")
                 wildPlaced = False
+                turn += 1
             elif (colorChoice == 2 and wildPlaced == True):
                 centerCard = UNOcard(2, ug.WILD, None, "small/2_w.png")
                 wildPlaced = False
+                turn += 1
             elif (colorChoice == 3 and wildPlaced == True):
                 centerCard = UNOcard(3, ug.WILD, None, "small/3_w.png")
                 wildPlaced = False
+                turn += 1
             elif (colorChoice == 4 and wildPlaced == True):
                 centerCard = UNOcard(4, ug.WILD, None, "small/4_w.png")
                 wildPlaced = False
+                turn += 1
             elif (colorChoice == 1 and wild4Placed == True):
                 centerCard = UNOcard(1, ug.WILD4, None, "small/1_w4.png")
                 wild4Placed = False
-                print(centerCard.getSpecial())
+                
             elif (colorChoice == 2 and wild4Placed == True):
                 centerCard = UNOcard(2, ug.WILD4, None, "small/2_w4.png")
                 wild4Placed = False
+              
             elif (colorChoice == 3 and wild4Placed == True):
                 centerCard = UNOcard(3, ug.WILD4, None, "small/3_w4.png")
                 wild4Placed = False
+                
             elif (colorChoice == 4 and wild4Placed == True):
                 centerCard = UNOcard(4, ug.WILD4, None, "small/4_w4.png")
                 wild4Placed = False
+                
 
         silhouette = pg.Rect(index * 100, 400, 136, 192)
         if (index <= 9):
@@ -123,75 +147,120 @@ while True:
                 screen.blit(UNOcard.getImage(playerHand[cards]), (100 * (cards-10), 600))
 
 
+    ## Need fix up CPU turn orders. Currently not going to work with Reverses or Skips.
+    if(turn <= playerCount):
+        if turn == 1:
+            if skip == 0:
+                if (UNOlogic.playableCard(centerCard, playerHand[selected]) == True):
+                    newCenter = playerHand[selected]
+                    screen.fill((39, 119, 20), ((len(playerHand)-1)*100,400,136,192))
+                    if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
+                        screen.blit(drawTwoText, (800, 200))
+                        skip = 1
+                        turn += 1
+                        #print("PROBLEM DRAW 2")
+                        for val in range(0,2):
+                            cpuHand = UNOlogic.draw(deck, cpuHand)
+
+                    elif(UNOcard.getSpecial(newCenter) == ug.WILD4):
+                        screen.blit(drawFourText, (800, 170))
+                        prompt = font.render("Choose Color. 1 = Red. 2 = Blue. 3 = Green. 4 = Yellow", False, 'White')
+                        instruct = font.render("(Press on keyboard)", False, 'White')
+                        screen.blit(prompt, (200, 200))
+                        screen.blit(instruct, (200, 230))
+                        wild4Placed = True
+                        skip = 1
+                        turn += 1
+                        #print("PROBLEM WILD 4")
+                        for val in range(0, 4):
+                            cpuHand = UNOlogic.draw(deck, cpuHand)
+
+                    elif(UNOcard.getSpecial(newCenter) == ug.WILD):
+                        prompt = font.render("Choose Color. 1 = Red. 2 = Blue. 3 = Green. 4 = Yellow", False, 'White')
+                        instruct = font.render("(Press on keyboard)", False, 'White')
+                        screen.blit(prompt, (200, 200))
+                        screen.blit(instruct, (200, 230))
+                        wildPlaced = True
+                        turn += 1
+                        #print("PROBLEM WILD")
+
+                    elif(UNOcard.getSpecial(newCenter) == ug.SKIP):
+                        screen.blit(skipText, (800, 200))
+                        skip = 1
+                        turn += 1 
+                        #print("PROBLEM SKIP")
+
+                    else: 
+                        turn += 1
+                        #print("PROBLEM PLAYED NORMAL")
+                    playerHand.remove(playerHand[selected])
+                    centerCard = newCenter
+            else: 
+                skip = 0
+                turn +=1
+                #print("PROBLEM RESOLVE SKIP")
+            
+        
+        elif turn == 2:
+            print("Its Computer #1's Turn!")
+            if(skip == 0):
+                output = UNOlogic.cpuPlay(deck, centerCard, cpuHand, turn)
+                newCenter = output[0]
+                newHand = output[1]
+
+                if newCenter != None:
+                    centerCard = newCenter
+                    turn += 1
+                    if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
+                        screen.blit(cpuDrawTwoText, (800, 200))
+                        skip = 1
+                        turn += 1
+                        for val in range(0,2):
+                            playerHand = UNOlogic.draw(deck, playerHand)
+
+                    elif(UNOcard.getSpecial(newCenter) == ug.WILD4):
+                        screen.blit(cpuDrawFourText, (800, 200))
+                        skip = 1
+                        turn += 1
+                        for val in range(0, 4):
+                            playerHand = UNOlogic.draw(deck, playerHand)
+
+                    elif(UNOcard.getSpecial(newCenter) == ug.SKIP):
+                        screen.blit(cpuSkipText, (800, 200))
+                        skip = 1
+                        turn += 1
+                else:
+                    cpuHand = newHand
+                    turn += 1
 
 
-    if turn == 1:
-        if (UNOlogic.playableCard(centerCard, playerHand[selected]) == True):
-            screen.fill((39, 119, 20))
-            newCenter = playerHand[selected]
+            else: 
+                print("Computer #1 is Skipped!")
+                skip = 0
+                turn += 1
+                print("Turn Status: " + str(turn))
 
-            if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
-                screen.blit(drawTwoText, (800, 200))
-                for val in range(0,2):
-                    cpuHand = UNOlogic.draw(deck, cpuHand)
-
-            elif(UNOcard.getSpecial(newCenter) == ug.WILD4):
-                screen.blit(drawFourText, (800, 200))
-                prompt = font.render("Choose Color. 1 = Red. 2 = Blue. 3 = Green. 4 = Yellow", False, 'White')
-                instruct = font.render("(Press on keyboard)", False, 'White')
-                screen.blit(prompt, (200, 200))
-                screen.blit(instruct, (200, 230))
-                wild4Placed = True
-                for val in range(0, 4):
-                    cpuHand = UNOlogic.draw(deck, cpuHand)
-
-            elif(UNOcard.getSpecial(newCenter) == ug.WILD):
-                prompt = font.render("Choose Color. 1 = Red. 2 = Blue. 3 = Green. 4 = Yellow", False, 'White')
-                instruct = font.render("(Press on keyboard)", False, 'White')
-                screen.blit(prompt, (200, 200))
-                screen.blit(instruct, (200, 230))
-                wildPlaced = True
-
-            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE):
-                screen.blit(skipText, (800, 200))
-                cpuTurn = 0
-            else:
-                cpuTurn = 1
-            playerHand.remove(playerHand[selected])
-            centerCard = newCenter
-            UNOlogic.displayHand(playerHand)
-            turn = 0
-    elif cpuTurn == 1:
-        cpuTurn = 0
-        output = UNOlogic.cpuPlay(deck, centerCard, cpuHand)
-        newCenter = output[0]
-        newHand = output[1]
-
-        if newCenter != None:
-            centerCard = newCenter
-            if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
-                screen.blit(cpuDrawTwoText, (800, 200))
-                for val in range(0,2):
-                    playerHand = UNOlogic.draw(deck, playerHand)
-
-            elif(UNOcard.getSpecial(newCenter) == ug.WILD4):
-                screen.blit(cpuDrawFourText, (800, 200))
-                for val in range(0, 4):
-                    playerHand = UNOlogic.draw(deck, playerHand)
-
-            elif(UNOcard.getSpecial(newCenter) == ug.SKIP or UNOcard.getSpecial(newCenter) == ug.REVERSE):
-                screen.blit(cpuSkipText, (800, 200))
-                cpuTurn = 1
-
-        cpuHand = newHand
-
-
+    else:
+        print("resetting turns to Turn 1")
+        turn = 0
+        
+    
     if len(playerHand) == 0 or playerHand == None:
         winText = font2.render("YOU WIN!", False, 'White')
         screen.blit(winText, (800, 100))
+        winCondition = 1
     elif len(cpuHand) == 0 or cpuHand == None:
         winText = font2.render("THE COMPUTER WINS!", False, 'White')
         screen.blit(winText, (800, 100))
+        winCondition = 1
+    #elif len(cpuHand2) == 0 or cpuHand2 == None:
+       # winText = font2.render("THE COMPUTER 2 WINS!", False, 'White')
+       # screen.blit(winText, (800, 100))
+       # winCondition = 1
+    #elif len(cpuHand3) == 0 or cpuHand3 == None:
+       # winText = font2.render("THE COMPUTER 3 WINS!", False, 'White')
+       # screen.blit(winText, (800, 100))
+       # winCondition = 1
 
     if len(deck) == 0 or deck == None:
         deck = UNOcard.deckBuilder()
