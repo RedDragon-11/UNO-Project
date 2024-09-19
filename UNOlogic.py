@@ -9,14 +9,14 @@ class UNOlogic:
     def playableCard(centerCard, playedCard):
         #Checks playedCard Color to centerCard.
         if(UNOcard.getColor(centerCard) == UNOcard.getColor(playedCard)):
-             return True
+            return True
         
         #As long as playedCard value or centerCard value aren't a special card. Check if values match
         elif(UNOcard.getValue(centerCard) != None and UNOcard.getValue(playedCard) != None):
              if(UNOcard.getValue(centerCard) == UNOcard.getValue(playedCard)):
-                  return True
+                return True
              elif(UNOcard.getValue(centerCard) != UNOcard.getValue(playedCard)):
-                  return False
+                return False
              
         #Checks if two cards are the same speical
         elif(UNOcard.getSpecial(centerCard) == UNOcard.getSpecial(playedCard)):
@@ -24,11 +24,30 @@ class UNOlogic:
         
         #Checks if card is wildcard
         elif(UNOcard.getSpecial(playedCard) == ug.WILD or UNOcard.getSpecial(playedCard) == ug.WILD4):
-             return True
+            return True
         
         #default
         else:
-             return False
+            return False
+           
+    def handOptimizer(cardCandidate, hand):
+        counter = 0
+        if UNOcard.getSpecial(cardCandidate) == ug.WILD or UNOcard.getSpecial(cardCandidate) == ug.WILD4:
+            counter = 10
+            print(ug.cardSpecials[UNOcard.getSpecial(cardCandidate)] + " Can play " + str(counter) + " cards.")
+            output = [cardCandidate, counter]
+        
+        else: 
+            for cards in range(0, len(hand)):
+                if UNOlogic.playableCard(cardCandidate, hand[cards]) == True:
+                    counter += 1
+                    print(ug.cardColor[UNOcard.getColor(cardCandidate)] + " " + str(UNOcard.getValue(cardCandidate)) + " Can play " + str(counter) + " cards.")
+            output = [cardCandidate, counter]
+
+        return output
+
+    
+    
                  
     def drawStartingHand(deck):
         hand = []
@@ -42,23 +61,22 @@ class UNOlogic:
     #def play(centerCard, playerHand):
     #    a = 1
     
-    def cpuPlay(deck, centerCard, cpuHand, position):
+    def cpuPlay(deck, centerCard, cpuHand, chosenCard, cardPosition, position):
         drawCard = True
-        for cards in range(0, len(cpuHand)):
-            if(UNOlogic.playableCard(centerCard, cpuHand[cards]) == True):
-                drawCard = False
-                #if the card selected is a wildcard
-                if(UNOcard.getColor(cpuHand[cards]) == None):
-                    card = UNOlogic.cpuSetWildCard(cpuHand, cpuHand[cards])
-                    removeCard = cpuHand[cards]
-                    cpuHand.remove(removeCard)
-                    output = [card, cpuHand]
-                    return output
-                centerCard = cpuHand[cards]
-                cpuHand.remove(cpuHand[cards])
-                output = [centerCard, cpuHand]
-                UNOlogic.displayCard(centerCard)
+        if(chosenCard != None):
+            drawCard = False
+            #if the card selected is a wildcard
+            if(UNOcard.getColor(chosenCard) == None):
+                card = UNOlogic.cpuSetWildCard(cpuHand, chosenCard)
+                removeCard = chosenCard
+                cpuHand.remove(removeCard)
+                output = [card, cpuHand]
                 return output
+            centerCard = chosenCard
+            cpuHand.remove(chosenCard)
+            output = [centerCard, cpuHand]
+            UNOlogic.displayCard(centerCard)
+            return output
     
         if(drawCard == True):
             output = [None, UNOlogic.draw(deck, cpuHand)]
@@ -77,16 +95,11 @@ class UNOlogic:
         green = 0
         yellow = 0
         highest = 0
-        color = 0
-        skip = 0
         list = []
 
-        #counts the color of highest amount in hand.
+        #counts the highest amount of colors in hand.
         for cards in range(0, len(cpuHand)):
-            print("Reds: " + str(red))
-            print("Blues: " + str(blue))
-            print("Greens: " + str(green))
-            print("Yellows: " + str(yellow))
+            
             if ((UNOcard.getColor(cpuHand[cards]) == ug.RED)):
                 red += 1
             elif ((UNOcard.getColor(cpuHand[cards]) == ug.BLUE)):
@@ -96,18 +109,19 @@ class UNOlogic:
             elif ((UNOcard.getColor(cpuHand[cards]) == ug.YELLOW)):
                 yellow += 1
             else:
-                randomColor = random.randint(1, 4)
-                color = randomColor
-                skip = 1
+                red += 1
+                blue += 1
+                green += 1
+                yellow += 1
         
-        if skip == 0:
-            list.append(red)
-            list.append(blue)
-            list.append(green)
-            list.append(yellow)
-            for var in range(0,4):
-                if (list[var] > highest):
-                    color = (var + 1)
+ 
+        list.append(red)
+        list.append(blue)
+        list.append(green)
+        list.append(yellow)
+        for var in range(0,4):
+            if (list[var] > highest):
+                 color = (var + 1)
 
         print("The Computer has set the color to " + ug.cardColor[color] + "!")
         if(UNOcard.getSpecial(card) == ug.WILD):
@@ -116,10 +130,6 @@ class UNOlogic:
         elif(UNOcard.getSpecial(card) == ug.WILD4):
             card = UNOcard(color, ug.WILD4, None, ("small/" + str(color) + "_w4.png"))
             return card            
-
-   # def playerSetWildCard(card):
-
-
 
     def setCenterCard(deck):
         card = random.choice(deck)
