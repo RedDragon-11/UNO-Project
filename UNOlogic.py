@@ -30,10 +30,22 @@ class UNOlogic:
         else:
             return False
            
-    def handOptimizer(cardCandidate, hand):
+    def handOptimizer(cardCandidate, hand, revenge, centerCard):
         counter = 0
+
+        if revenge >= 35:
+            if random.randint(0,100) <= revenge:
+                print("Revenge Activated.")
+                for cards in range(0,len(hand)):
+                    if ug.cardSpecials[UNOcard.getSpecial(hand[cards])] == ug.SKIP or ug.DRAW2 or ug.REVERSE:
+                        if UNOlogic.playableCard(centerCard, hand[cards]) == True:
+                            counter = 20
+                            output = [cardCandidate, counter]
+                            return output
+
+
         if UNOcard.getSpecial(cardCandidate) == ug.WILD or UNOcard.getSpecial(cardCandidate) == ug.WILD4:
-            counter = 10
+            counter += 2
             print(ug.cardSpecials[UNOcard.getSpecial(cardCandidate)] + " Can play " + str(counter) + " cards.")
             output = [cardCandidate, counter]
         
