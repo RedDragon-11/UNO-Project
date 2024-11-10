@@ -32,30 +32,21 @@ class UNOlogic:
            
     def handOptimizer(cardCandidate, hand, revenge, centerCard):
         counter = 0
-
         if revenge >= 35:
             if random.randint(0,100) <= revenge:
                 print("Revenge Activated.")
                 for cards in range(0,len(hand)):
-                    if ug.cardSpecials[UNOcard.getSpecial(hand[cards])] == ug.SKIP or ug.DRAW2 or ug.REVERSE:
+                    if UNOcard.getSpecial(hand[cards]) == ug.SKIP or ug.DRAW2 or ug.REVERSE:
                         if UNOlogic.playableCard(centerCard, hand[cards]) == True:
                             counter = 20
-                            output = [cardCandidate, counter]
-                            return output
+                            outputRevenge = [cardCandidate, counter]
+                            return outputRevenge
 
-
-        if UNOcard.getSpecial(cardCandidate) == ug.WILD or UNOcard.getSpecial(cardCandidate) == ug.WILD4:
-            counter += 2
-            print(ug.cardSpecials[UNOcard.getSpecial(cardCandidate)] + " Can play " + str(counter) + " cards.")
-            output = [cardCandidate, counter]
-        
-        else: 
-            for cards in range(0, len(hand)):
-                if UNOlogic.playableCard(cardCandidate, hand[cards]) == True:
-                    counter += 1
-                    print(ug.cardColor[UNOcard.getColor(cardCandidate)] + " " + str(UNOcard.getValue(cardCandidate)) + " Can play " + str(counter) + " cards.")
-            output = [cardCandidate, counter]
-
+        for cards in range(0, len(hand)):
+            if UNOlogic.playableCard(cardCandidate, hand[cards]) == True:
+                counter += 1
+                print(ug.cardColor[UNOcard.getColor(cardCandidate)] + " " + str(UNOcard.getValue(cardCandidate)) + " " + str(UNOcard.getSpecial(cardCandidate)) + " can play " + str(counter) + " cards.")
+                output = [cardCandidate, counter]
         return output
 
     
@@ -73,26 +64,26 @@ class UNOlogic:
     #def play(centerCard, playerHand):
     #    a = 1
     
-    def cpuPlay(deck, centerCard, cpuHand, chosenCard, cardPosition, position):
-        drawCard = True
+    def cpuPlay(deck, centerCard, cpuHand, chosenCard, playerPosition):
         if(chosenCard != None):
             drawCard = False
             #if the card selected is a wildcard
             if(UNOcard.getColor(chosenCard) == None):
+                cpuHand.remove(chosenCard)
                 card = UNOlogic.cpuSetWildCard(cpuHand, chosenCard)
-                removeCard = chosenCard
-                cpuHand.remove(removeCard)
                 output = [card, cpuHand]
                 return output
-            centerCard = chosenCard
-            cpuHand.remove(chosenCard)
-            output = [centerCard, cpuHand]
-            UNOlogic.displayCard(centerCard)
-            return output
-    
+            else:
+                centerCard = chosenCard
+                cpuHand.remove(chosenCard)
+                output = [centerCard, cpuHand]
+                UNOlogic.displayCard(centerCard)
+                return output
+        else: drawCard = True
+
         if(drawCard == True):
             output = [None, UNOlogic.draw(deck, cpuHand)]
-            print("Computer #" + str(position - 1) + " Has Drawn a Card!")
+            print("Computer #" + str(playerPosition - 1) + " Has Drawn a Card!")
             return output
 
     def draw(deck, hand):

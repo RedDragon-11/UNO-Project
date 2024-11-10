@@ -90,7 +90,32 @@ while True:
                             if (UNOlogic.playableCard(centerCard, playerHand[selected]) == True):
                                 print(ug.cardColor[UNOcard.getColor(playerHand[selected])] + " " + str(UNOcard.getValue(playerHand[selected])) + " " + ug.cardSpecials[UNOcard.getSpecial(playerHand[selected])])
                                 index = 0
-                                turn += 1
+                                if(UNOcard.getSpecial(playerHand[selected]) == ug.WILD):
+                                    prompt = font.render("Choose Color. 1 = Red. 2 = Blue. 3 = Green. 4 = Yellow", False, 'White')
+                                    instruct = font.render("(Press on keyboard)", False, 'White')
+                                    screen.blit(prompt, (200, 200))
+                                    screen.blit(instruct, (200, 230))
+                                    wildPlaced = True
+                                    #print("PROBLEM WILD")
+
+                                elif(UNOcard.getSpecial(playerHand[selected]) == ug.WILD4):
+                                    screen.blit(drawFourText, (800, 170))
+                                    prompt = font.render("Choose Color. 1 = Red. 2 = Blue. 3 = Green. 4 = Yellow", False, 'White')
+                                    instruct = font.render("(Press on keyboard)", False, 'White')
+                                    screen.blit(prompt, (200, 200))
+                                    screen.blit(instruct, (200, 230))
+                                    wild4Placed = True
+                                    skip = 1
+                                    if reverse == False:
+                                        cpuRevenge += 25
+                                        for val in range(0,4):
+                                            cpuHand = UNOlogic.draw(deck, cpuHand)
+                                    else:
+                                        cpu3Revenge += 25
+                                        for val in range(0,4):
+                                            cpuHand3 = UNOlogic.draw(deck, cpuHand3)                                    
+                                else:
+                                    turn += 1
                             else:
                                 screen.blit(wrongCardText, (800,200))
                     else:
@@ -125,41 +150,52 @@ while True:
                     colorChoice = 3
                 if event.key == pg.K_4:
                     colorChoice = 4
+
                 if (colorChoice == 1 and wildPlaced == True):
                     centerCard = UNOcard(1, ug.WILD, None, "small/1_w.png")
                     wildPlaced = False
-                    turn += 1
+                    turn += 1  
 
                 elif (colorChoice == 2 and wildPlaced == True):
                     centerCard = UNOcard(2, ug.WILD, None, "small/2_w.png")
                     wildPlaced = False
-                    turn += 1
+                    turn += 1             
+                    
                 elif (colorChoice == 3 and wildPlaced == True):
                     centerCard = UNOcard(3, ug.WILD, None, "small/3_w.png")
                     wildPlaced = False
                     turn += 1
+   
 
                 elif (colorChoice == 4 and wildPlaced == True):
                     centerCard = UNOcard(4, ug.WILD, None, "small/4_w.png")
                     wildPlaced = False
                     turn += 1
+  
+
                 elif (colorChoice == 1 and wild4Placed == True):
                     centerCard = UNOcard(1, ug.WILD4, None, "small/1_w4.png")
                     wild4Placed = False
-                    
+                    turn += 1      
+
                 elif (colorChoice == 2 and wild4Placed == True):
                     centerCard = UNOcard(2, ug.WILD4, None, "small/2_w4.png")
                     wild4Placed = False
-                
+                    turn += 1      
+
                 elif (colorChoice == 3 and wild4Placed == True):
                     centerCard = UNOcard(3, ug.WILD4, None, "small/3_w4.png")
                     wild4Placed = False
-                    
+                    turn += 1      
+
                 elif (colorChoice == 4 and wild4Placed == True):
                     centerCard = UNOcard(4, ug.WILD4, None, "small/4_w4.png")
                     wild4Placed = False
+                    turn += 1      
+
         else:
-            turn += 1
+            turn += 2
+            skip = 0
 
                 
 
@@ -184,13 +220,14 @@ while True:
             if (cards >= 10):
                 screen.blit(UNOcard.getImage(playerHand[cards]), (100 * (cards-10), 600))
 
-    ## Need fix up CPU turn orders. Currently not going to work with Reverses or Skips.
+    
     if(turn <= playerCount and turn >= 0):
         if turn == 1:
             if skip == 0:
                 print(str(selected) + " " + str(len(playerHand)))
                 newCenter = playerHand[selected]
                 screen.fill((39, 119, 20), ((len(playerHand)-1)*100,400,136,192))
+
                 if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
                     screen.blit(drawTwoText, (800, 200))
                     skip = 1
@@ -203,43 +240,11 @@ while True:
                         turn -= 2
                         cpu3Revenge += .15
                         for val in range(0,2):
-                            cpu3Hand = UNOlogic.draw(deck, cpu3Hand)
+                            cpuHand3 = UNOlogic.draw(deck, cpuHand3)
 
                     #print("PROBLEM DRAW 2")
                     for val in range(0,2):
                         cpuHand = UNOlogic.draw(deck, cpuHand)
-
-                elif(UNOcard.getSpecial(newCenter) == ug.WILD4):
-                        screen.blit(drawFourText, (800, 170))
-                        prompt = font.render("Choose Color. 1 = Red. 2 = Blue. 3 = Green. 4 = Yellow", False, 'White')
-                        instruct = font.render("(Press on keyboard)", False, 'White')
-                        screen.blit(prompt, (200, 200))
-                        screen.blit(instruct, (200, 230))
-                        wild4Placed = True
-                        skip = 1
-                        if reverse == False:
-                            turn += 1
-                            cpuRevenge += 25
-                            for val in range(0,4):
-                                cpuHand = UNOlogic.draw(deck, cpuHand)
-                        else:
-                            turn -= 2
-                            cpu3Revenge += 25
-                            for val in range(0,4):
-                                cpu3Hand = UNOlogic.draw(deck, cpu3Hand)
-
-
-                elif(UNOcard.getSpecial(newCenter) == ug.WILD):
-                        prompt = font.render("Choose Color. 1 = Red. 2 = Blue. 3 = Green. 4 = Yellow", False, 'White')
-                        instruct = font.render("(Press on keyboard)", False, 'White')
-                        screen.blit(prompt, (200, 200))
-                        screen.blit(instruct, (200, 230))
-                        wildPlaced = True
-                        if reverse == False:
-                            turn += 1
-                        else:
-                            turn -= 2
-                        #print("PROBLEM WILD")
 
                 elif(UNOcard.getSpecial(newCenter) == ug.SKIP):
                         screen.blit(skipText, (800, 200))
@@ -281,6 +286,7 @@ while True:
                     turn += 1
                 else:
                     turn -= 2
+            print("It is now turn" + str(turn))
                 
             
         
@@ -289,7 +295,6 @@ while True:
             if(skip == 0):
                 counterMax = 0
                 chosenCard = None
-                cardPosition = None
                 temp = 0
                 print("My hand is " + str(len(cpuHand)) + " Cards Long.")
                 for value in range(0, len(cpuHand)):
@@ -306,14 +311,14 @@ while True:
                                 chosenCard = temp[0]
                                 counterMax = temp[1]                            
                     
-                output = UNOlogic.cpuPlay(deck, centerCard, cpuHand, chosenCard, cardPosition, turn)
+                output = UNOlogic.cpuPlay(deck, centerCard, cpuHand, chosenCard, turn)
                 newCenter = output[0]
                 newHand = output[1]
 
                 if newCenter != None:
                     centerCard = newCenter
                     if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
-                        screen.blit(cpuDrawTwoText, (800, 200))
+                        screen.blit(cpuDrawTwoText, (800, 150))
                         skip = 1
                         if reverse == False:
                             turn += 1
@@ -345,18 +350,25 @@ while True:
                         #print("PROBLEM SKIP")
 
                     elif(UNOcard.getSpecial(newCenter) == ug.REVERSE):
+                        print("Resolving Reverse")
                         if reverse == False:
                             screen.blit(reverseText, (800,200))
                             reverse = True
                             turn -= 2
                             OneVsTwoRevenge += 10
-                            print(str(turn))
+                            print("It is now turn" + str(turn))
                         elif reverse == True:
                             screen.blit(reverseText, (800,200))
                             reverse = False
                             turn += 1
-                            print(str(turn))
-                        print("Resolving Reverse")                        
+                            print("It is now turn" + str(turn))
+                        
+                    elif(UNOcard.getValue(newCenter) != None): 
+                        if reverse == False:
+                            turn += 1
+                        else:
+                            turn -= 2
+
                 else:
                     cpuHand = newHand
                     if reverse == False:
@@ -369,41 +381,37 @@ while True:
                 if reverse == False:
                     turn += 1
                 else:
-                    turn -= 1
+                    turn -= 2
                 print("Turn Status: " + str(turn))
+            print("It is now turn" + str(turn))
 
         elif turn == 3:
             print("Its Computer #2's Turn!")
             if(skip == 0):
                 counterMax = 0
                 chosenCard = None
-                cardPosition = None
                 temp = 0
                 print("My hand is " + str(len(cpuHand2)) + " Cards Long.")
-                for value in range(0, len(cpuHand2)):
-                    if (UNOlogic.playableCard(centerCard, cpuHand2[value])) == True:
-                        print(ug.cardColor[UNOcard.getColor(cpuHand2[value])] + " " + str(UNOcard.getValue(cpuHand2[value])))
+                for value2 in range(0, len(cpuHand2)):
+                    if (UNOlogic.playableCard(centerCard, cpuHand2[value2])) == True:
+                        print(ug.cardColor[UNOcard.getColor(cpuHand2[value2])] + " " + str(UNOcard.getValue(cpuHand2[value2])))
                         if reverse == False:
-                            temp = UNOlogic.handOptimizer(cpuHand[value], cpuHand2, ThreeVsTwoRevenge, centerCard)
+                            temp = UNOlogic.handOptimizer(cpuHand2[value2], cpuHand2, ThreeVsTwoRevenge, centerCard)
                             if temp[1] > counterMax:
                                 chosenCard = temp[0]
                                 counterMax = temp[1]
                         else: 
-                            temp = UNOlogic.handOptimizer(cpuHand[value], cpuHand2, twoVsOneRevenge, centerCard)
+                            temp = UNOlogic.handOptimizer(cpuHand2[value2], cpuHand2, twoVsOneRevenge, centerCard)
                             if temp[1] > counterMax:
                                 chosenCard = temp[0]
                                 counterMax = temp[1]            
                     
-                output = UNOlogic.cpuPlay(deck, centerCard, cpuHand2, chosenCard, cardPosition, turn)
+                output = UNOlogic.cpuPlay(deck, centerCard, cpuHand2, chosenCard, turn)
                 newCenter = output[0]
                 newHand = output[1]
 
                 if newCenter != None:
                     centerCard = newCenter
-                    if reverse == False:
-                        turn += 1
-                    else:
-                        turn -= 1
                     if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
                         screen.blit(cpuDrawTwoText, (800, 200))
                         skip = 1
@@ -429,19 +437,21 @@ while True:
                             playerHand = UNOlogic.draw(deck, playerHand)
                         
                     elif(UNOcard.getSpecial(newCenter) == ug.REVERSE):
+                        print("Resolving Reverse")
                         if reverse == False:
                             screen.blit(reverseText, (800,200))
                             reverse = True
                             turn -= 1
+                            print("Turn should now be CPU 1")
                             TwoVsThreeRevenge += 10
-                            print(str(turn))
+                            print("It is now turn" + str(turn))
                         elif reverse == True:
                             screen.blit(reverseText, (800,200))
                             reverse = False
                             turn += 1
                             twoVsOneRevenge += 10
                             print(str(turn))
-                        print("Resolving Reverse")
+                        
 
                     elif(UNOcard.getSpecial(newCenter) == ug.SKIP):
                         screen.blit(cpuSkipText, (800, 200))
@@ -452,6 +462,12 @@ while True:
                         else:
                             turn -= 1
                             twoVsOneRevenge += 15
+
+                    elif(UNOcard.getValue(newCenter) != None): 
+                        if reverse == False:
+                            turn += 1
+                        else:
+                            turn -= 1
                 else:
                     cpuHand2 = newHand
                     if reverse == False:
@@ -468,39 +484,36 @@ while True:
                 else:
                     turn -= 1
                 print("Turn Status: " + str(turn))
+            print("It is now turn " + str(turn))
 
         elif turn == 4:
             print("Its Computer #3's Turn!")
             if(skip == 0):
                 counterMax = 0
-                chosenCard = None
-                cardPosition = None
+                topCard = None
                 temp = 0
                 print("My hand is " + str(len(cpuHand3)) + " Cards Long.")
-                for value in range(0, len(cpuHand3)):
-                    if (UNOlogic.playableCard(centerCard, cpuHand3[value])) == True:
-                        print(ug.cardColor[UNOcard.getColor(cpuHand3[value])] + " " + str(UNOcard.getValue(cpuHand3[value])))
+                for value3 in range(0, len(cpuHand3)):
+                    if (UNOlogic.playableCard(centerCard, cpuHand3[value3])) == True:
+                        chosenCard = cpuHand3[value3] 
+                        print(ug.cardColor[UNOcard.getColor(chosenCard)] + " " + str(UNOcard.getValue(chosenCard)))
                         if reverse == False:
-                            temp = UNOlogic.handOptimizer(cpuHand[value], cpuHand3, cpu3Revenge, centerCard)
+                            temp = UNOlogic.handOptimizer(chosenCard, cpuHand3, cpu3Revenge, centerCard)
                             if temp[1] > counterMax:
-                                chosenCard = temp[0]
+                                topCard = temp[0]
                                 counterMax = temp[1]
                         else: 
-                            temp = UNOlogic.handOptimizer(cpuHand[value], cpuHand3, TwoVsThreeRevenge, centerCard)
+                            temp = UNOlogic.handOptimizer(chosenCard, cpuHand3, TwoVsThreeRevenge, centerCard)
                             if temp[1] > counterMax:
-                                chosenCard = temp[0]
+                                topCard = temp[0]
                                 counterMax = temp[1]            
                     
-                output = UNOlogic.cpuPlay(deck, centerCard, cpuHand3, chosenCard, cardPosition, turn)
-                newCenter = output[0]
+                output = UNOlogic.cpuPlay(deck, centerCard, cpuHand3, topCard, turn)
+                newCenter = output[0] 
                 newHand = output[1]
 
                 if newCenter != None:
                     centerCard = newCenter
-                    if reverse == False:
-                        turn += 1
-                    else:
-                        turn -= 1
                     if (UNOcard.getSpecial(newCenter) == ug.DRAW2):
                         screen.blit(cpuDrawTwoText, (800, 200))
                         skip = 1
@@ -545,6 +558,13 @@ while True:
                         else:
                             turn -= 1
                             ThreeVsTwoRevenge += 15
+
+                    elif(UNOcard.getValue(newCenter) != None): 
+                        if reverse == False:
+                            turn += 1
+                        else:
+                            turn -= 1
+
                 else:
                     cpuHand3 = newHand
                     if reverse == False:
@@ -561,8 +581,7 @@ while True:
                 else:
                     turn -= 1
                 print("Turn Status: " + str(turn))
-
-
+            print("It is now turn" + str(turn))
     else:
         print(str(turn))
         print("resetting turns")
